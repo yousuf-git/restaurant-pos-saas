@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { Minus, Plus, Trash2, X, Printer, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Receipt } from './Receipt';
+import { Receipt, printReceiptWithQzTray } from './Receipt';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -29,7 +29,7 @@ export function BillPanel({ focused, focusedBillIndex }: BillPanelProps) {
   const user = useAuthStore((s) => s.user);
 
   const [confirming, setConfirming] = useState(false);
-  const [showReceipt, setShowReceipt] = useState(false);
+  // const [showReceipt, setShowReceipt] = useState(false); // Old browser-print approach
   const [printData, setPrintData] = useState<{
     orderNumber: number;
     items: typeof items;
@@ -37,7 +37,7 @@ export function BillPanel({ focused, focusedBillIndex }: BillPanelProps) {
     note: string;
     dateTime: Date;
   } | null>(null);
-  const receiptRef = useRef<HTMLDivElement>(null);
+  // const receiptRef = useRef<HTMLDivElement>(null); // Old browser-print approach
   const billItemsRef = useRef<HTMLDivElement>(null);
 
   const totalAmount = total();
@@ -50,14 +50,38 @@ export function BillPanel({ focused, focusedBillIndex }: BillPanelProps) {
     }
   }, [focused, focusedBillIndex]);
 
-  const triggerPrint = useCallback(() => {
-    setShowReceipt(true);
-    setTimeout(() => {
-      window.print();
-      // Hide receipt after printing
-      setTimeout(() => setShowReceipt(false), 500);
-    }, 100);
-  }, []);
+  // ── Old browser-print approach ──
+  // const triggerPrint = useCallback(() => {
+  //   setShowReceipt(true);
+  //   setTimeout(() => {
+  //     window.print();
+  //     // Hide receipt after printing
+  //     setTimeout(() => setShowReceipt(false), 500);
+  //   }, 100);
+  // }, []);
+
+  // ── New QZ-Tray thermal printing ──
+  const triggerPrint = useCallback(async (orderData: {
+    orderNumber: number;
+    items: typeof items;
+    total: number;
+    note: string;
+    dateTime: Date;
+  }) => {
+    try {
+      await printReceiptWithQzTray({
+        restaurant,
+        orderNumber: orderData.orderNumber,
+        items: orderData.items,
+        total: orderData.total,
+        note: orderData.note,
+        dateTime: orderData.dateTime,
+      });
+    } catch (err) {
+      console.error('QZ-Tray print error:', err);
+      toast.error('Failed to print receipt. Is QZ Tray running?');
+    }
+  }, [restaurant]);
 
   const handleConfirmOrder = async () => {
     if (!user?.restaurant_id || !user?.id) {
@@ -133,13 +157,13 @@ export function BillPanel({ focused, focusedBillIndex }: BillPanelProps) {
     clear();
     setConfirming(false);
     toast.success(`Order #${orderNum} confirmed`);
-    triggerPrint();
+    triggerPrint(orderData);
   };
 
   const handleReprint = () => {
     if (lastOrder) {
       setPrintData(lastOrder);
-      triggerPrint();
+      triggerPrint(lastOrder);
     }
   };
 
@@ -274,7 +298,7 @@ export function BillPanel({ focused, focusedBillIndex }: BillPanelProps) {
         </div>
       </div>
 
-      {/* Hidden receipt for printing — only rendered when actively printing */}
+      {/* ── Old browser-print approach ──
       {showReceipt && receiptData && (
         <Receipt
           ref={receiptRef}
@@ -286,6 +310,7 @@ export function BillPanel({ focused, focusedBillIndex }: BillPanelProps) {
           dateTime={receiptData.dateTime}
         />
       )}
+      */}
     </div>
   );
 }
