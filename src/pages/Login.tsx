@@ -4,10 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { UtensilsCrossed, ShieldCheck, User } from 'lucide-react';
-
-const TEST_ADMIN = { email: 'admin@restpos.com', password: 'admin123' };
-const TEST_OPERATOR = { email: 'ali@restpos.com', password: 'operator123' };
+import { UtensilsCrossed } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,12 +37,6 @@ const Login = () => {
     }
   };
 
-  const fillCredentials = (creds: { email: string; password: string }) => {
-    setEmail(creds.email);
-    setPassword(creds.password);
-    setError('');
-  };
-
   return (
     <div className="flex min-h-screen">
       {/* Left — branding panel */}
@@ -60,7 +51,7 @@ const Login = () => {
           </div>
           <h1 className="text-4xl font-bold mb-4">Restaurant POS</h1>
           <p className="text-bill-muted text-lg max-w-md">
-            Fast, reliable point-of-sale system for take-away restaurants.
+            Simplified point-of-sale for dine-in and take-away, manage orders, tables, and more.
           </p>
         </div>
       </div>
@@ -116,33 +107,6 @@ const Login = () => {
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
-
-          {/* Quick-fill test credentials */}
-          <div className="mt-6 pt-6 border-t border-border">
-            <p className="text-xs text-muted-foreground mb-3 text-center">Quick login (test accounts)</p>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="flex-1 gap-2"
-                onClick={() => fillCredentials(TEST_ADMIN)}
-              >
-                <ShieldCheck className="w-4 h-4" />
-                Admin
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="flex-1 gap-2"
-                onClick={() => fillCredentials(TEST_OPERATOR)}
-              >
-                <User className="w-4 h-4" />
-                Operator
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
