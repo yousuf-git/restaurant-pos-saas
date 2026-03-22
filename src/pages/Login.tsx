@@ -39,7 +39,7 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* Left — branding panel */}
+      {/* Left - branding panel */}
       <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-bill text-bill-foreground relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-bill-accent" />
@@ -49,21 +49,21 @@ const Login = () => {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary mb-8">
             <UtensilsCrossed className="w-10 h-10 text-primary-foreground" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">Restaurant POS</h1>
+          <h1 className="text-4xl font-bold mb-4">Restoria</h1>
           <p className="text-bill-muted text-lg max-w-md">
-            Simplified point-of-sale for dine-in and take-away, manage orders, tables, and more.
+            Modern point-of-sale for dine-in and take-away. Manage orders, tables, and more.
           </p>
         </div>
       </div>
 
-      {/* Right — login form */}
+      {/* Right - login form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-sm">
           <div className="lg:hidden flex items-center gap-3 mb-8">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary">
               <UtensilsCrossed className="w-5 h-5 text-primary-foreground" />
             </div>
-            <h1 className="text-xl font-bold">Restaurant POS</h1>
+            <h1 className="text-xl font-bold">Restoria</h1>
           </div>
 
           <h2 className="text-2xl font-bold mb-1">Welcome back</h2>
